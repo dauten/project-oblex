@@ -3,9 +3,9 @@ import random
 from PIL import Image, ImageTk
 import json
 
-num_of_rows=9
-num_of_cols=16
-square_size=60
+num_of_rows=11
+num_of_cols=14
+square_size=50
 
 class App(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -21,11 +21,15 @@ class App(tk.Tk):
         self.oval = {}
 
 
-        self.redraw(200)
+        self.redraw(50)
 
     def redraw(self, delay):
         self.canvas.itemconfig("rect", fill="green")
-        board = json.loads(open("board.json", "r").read())
+        try:
+            board = json.loads(open("board.json", "r").read())
+        except Exception as e:
+            print(open("board.json", r).read())
+
         self.im = []
         self.photo = []
         for column in range(num_of_cols):
@@ -38,7 +42,7 @@ class App(tk.Tk):
                 self.rect[row,column] = self.canvas.create_rectangle(x1,y1,x2,y2, tags="rect")
                 for each in board["objects"]:
                     if column is each["column"] and row is each["row"]:
-                        self.im.append(Image.open(each["file"]))
+                        self.im.append(Image.open(each["filename"]))
                         self.im.append(self.im[-1].resize((square_size-2,square_size-2), Image.ANTIALIAS))
                         self.photo.append(ImageTk.PhotoImage(self.im[-1]))
                         self.canvas.create_image((x1-(square_size/2)-1),(y1-(square_size/2)-1), image=self.photo[-1])

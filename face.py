@@ -7,6 +7,7 @@ from imutils.video import VideoStream
 from imutils.video import FPS
 import argparse
 import imutils
+import numpy as np
 import time
 import cv2
 
@@ -64,6 +65,8 @@ else:
 fps = None
 print("entering loop")
 # loop over frames from the video stream
+f = 1
+fps = FPS().start()
 while True:
 	# grab the current frame, then handle if we are using a
 	# VideoStream or VideoCapture object
@@ -89,7 +92,14 @@ while True:
 			(x, y, w, h) = [int(v) for v in box]
 			cv2.rectangle(frame, (x, y), (x + w, y + h),
 				(0, 255, 0), 2)
-
+			print("Box is at "+str(x)+", "+str(y)+" to "+str(x+w)+", "+str(h+y))
+			#draw center
+			cv2.rectangle(frame, (int(((x+(w/2)))-1), int(((y+(h/2)))-1)), (int(((x+(w/2)))+1), int(((y+(h/2)))+1)), (0, 255, 0), 2)
+			centerX = int(((x+(w/2)))/34)+1
+			centerY = int(((y+(h/2)))/34)+1
+			f = open("board.json", "w")
+		#	f.write('{"objects":[{"filename":"'+filename+'", "row":'+str(centerY)+',"column":'+str(centerX)+'}]}')
+			f.close()
 		# update the FPS counter
 		fps.update()
 		fps.stop()
@@ -115,19 +125,51 @@ while True:
 	# if the 's' key is selected, we are going to "select" a bounding
 	# box to track
 	if key == ord("s"):
+
+		filename = input("Enter filename:\n")
+		print("Got it, "+filename)
 		# select the bounding box of the object we want to track (make
 		# sure you press ENTER or SPACE after selecting the ROI)
 		initBB = cv2.selectROI("Frame", frame, fromCenter=False,
 			showCrosshair=True)
+		print(initBB)
 
 		# start OpenCV object tracker using the supplied bounding box
 		# coordinates, then start the FPS throughput estimator as well
 		tracker.init(frame, initBB)
-		fps = FPS().start()
+
 
 	# if the `q` key was pressed, break from the loop
 	elif key == ord("q"):
 		break
+
+'''
+	##iff there is a good candidate for dwarf, select it
+	img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	template = cv2.imread('dwarf_t.png',0)
+	w, h = template.shape[::-1]
+
+	res = cv2.matchTemplate(img_gray,template,cv2.TM_CCOEFF_NORMED)
+
+	min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+	top_left = max_loc
+	bottom_right = (top_left[0] + w, top_left[1] + h)
+	initBB = (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
+	#cv2.rectangle(frame,top_left, bottom_right, 255, 2)
+
+	tracker.init(frame, initBB)
+
+
+
+	if f == 1:
+		initBB = (207, 149, 93, 104)
+		tracker.init(frame, initBB)
+		fps = FPS().start()
+		f = 0
+'''
+
+
 
 # if we are using a webcam, release the pointer
 if not args.get("video", False):

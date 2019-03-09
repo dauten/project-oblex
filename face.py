@@ -23,6 +23,7 @@ args = vars(ap.parse_args())
 
 # if we are using OpenCV 3.2 OR BEFORE, we can use a special factory
 # function to create our object tracker
+
 if int(major) == 3 and int(minor) < 3:
 	tracker = cv2.Tracker_create(args["tracker"].upper())
 
@@ -52,7 +53,7 @@ initBB = None
 # if a video path was not supplied, grab the reference to the web cam
 if not args.get("video", False):
 	print("[INFO] starting video stream...")
-	vs = VideoStream(src=0).start()
+	vs = VideoStream(src=1).start()
 	time.sleep(1.0)
 
 # otherwise, grab a reference to the video file
@@ -61,7 +62,7 @@ else:
 
 # initialize the FPS throughput estimator
 fps = None
-
+print("entering loop")
 # loop over frames from the video stream
 while True:
 	# grab the current frame, then handle if we are using a

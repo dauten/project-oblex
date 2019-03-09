@@ -64,21 +64,30 @@ while True:
 	print(boxes)
 
 	b = open("board.json", "w")
+	l = open("large.json", "w")
 	b.write('{"objects":[')
+	l.write('{"objects":[')
 	# loop over the bounding boxes and draw then on the frame
 	for n, box in enumerate(boxes):
 		(x, y, w, h) = [int(v) for v in box]
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 		print(n)
-		#update board
-		centerX = int(((x+(w/2)))/45)+1
-		centerY = int(((y+(h/2)))/45)+1
-		if n > 0:
-			b.write(",\n")
-		b.write('{"filename":"'+files[n]+'", "row":'+str(centerY)+',"column":'+str(centerX)+"}")
 
+		if w < 50 and h < 50:
+			#update board
+			centerX = int(((x+(w/2)))/45)+1
+			centerY = int(((y+(h/2)))/45)+1
+			if n > 0:
+				b.write(",\n")
+			b.write('{"filename":"'+files[n]+'", "row":'+str(centerY)+',"column":'+str(centerX)+"}")
+		else:
+			dy = int(h/50)+1
+			dx = int(w/50)+1
+			l.write('{"filename":"'+files[n]+'", "tlx":'+str(int(1.5 + x/45))+',"tly":'+str(int(1.5 + y/45))+',"height":'+str(dy)+',"width":'+str(dx)+"}")
 	b.write("]}")
 	b.close()
+	l.write("]}")
+	l.close()
 	# show the output frame
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF

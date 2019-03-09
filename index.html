@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<img src="out.png" id="demo"/>
+<img src="board.png" id="demo"/>
 <script>
 
 setInterval(function(){
@@ -11,10 +11,10 @@ setInterval(function(){
     if (this.readyState == 4 && this.status == 200) {
     var d = new Date();
      document.getElementById("demo").src = this.responseText.src
-     document.getElementById("demo").src = "out.png"
+     document.getElementById("demo").src = "board.png"
     }
   };
-  xhttp.open("GET", "out.png", true);
+  xhttp.open("GET", "board.png", true);
   xhttp.send();
   console.log("update")
 }, 500); /* time in milliseconds (ie 2 seconds)*/

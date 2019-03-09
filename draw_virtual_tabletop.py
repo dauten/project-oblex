@@ -19,16 +19,20 @@ class App(tk.Tk):
 
         self.rect = {}
         self.oval = {}
-
+        #self.bgi = tk.PhotoImage("grass.jpg")
+        #self.bgl = tk.Label(self, image=self.bgi)
+        #self.bgl.place(x=0, y=0, relwidth=1, relheight=1)
 
         self.redraw(50)
 
     def redraw(self, delay):
-        self.canvas.itemconfig("rect", fill="green")
+        self.canvas.itemconfig("rect")
         try:
             board = json.loads(open("board.json", "r").read())
         except Exception as e:
             print(open("board.json", r).read())
+
+
 
         self.im = []
         self.photo = []

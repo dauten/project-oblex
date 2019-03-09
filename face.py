@@ -67,6 +67,7 @@ print("entering loop")
 # loop over frames from the video stream
 f = 1
 fps = FPS().start()
+filename="dwarf.png"
 while True:
 	# grab the current frame, then handle if we are using a
 	# VideoStream or VideoCapture object
@@ -98,7 +99,7 @@ while True:
 			centerX = int(((x+(w/2)))/34)+1
 			centerY = int(((y+(h/2)))/34)+1
 			f = open("board.json", "w")
-		#	f.write('{"objects":[{"filename":"'+filename+'", "row":'+str(centerY)+',"column":'+str(centerX)+'}]}')
+			f.write('{"objects":[{"filename":"'+filename+'", "row":'+str(centerY)+',"column":'+str(centerX)+'}]}')
 			f.close()
 		# update the FPS counter
 		fps.update()
@@ -143,25 +144,29 @@ while True:
 	elif key == ord("q"):
 		break
 
-'''
+
 	##iff there is a good candidate for dwarf, select it
 	img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+
+
+
 	template = cv2.imread('dwarf_t.png',0)
 	w, h = template.shape[::-1]
 
-	res = cv2.matchTemplate(img_gray,template,cv2.TM_CCOEFF_NORMED)
+	res = cv2.matchTemplate(img_gray,template,cv2.TM_SQDIFF)
 
 	min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
-	top_left = max_loc
+	top_left = min_loc
 	bottom_right = (top_left[0] + w, top_left[1] + h)
-	initBB = (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
+	initBB = (top_left[0], top_left[1], w, h)
 	#cv2.rectangle(frame,top_left, bottom_right, 255, 2)
 
 	tracker.init(frame, initBB)
 
 
-
+'''
 	if f == 1:
 		initBB = (207, 149, 93, 104)
 		tracker.init(frame, initBB)

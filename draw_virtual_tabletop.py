@@ -2,7 +2,8 @@ import tkinter as tk
 import random
 from PIL import Image, ImageTk
 import json
-
+import wand
+import subprocess
 num_of_rows=11
 num_of_cols=14
 square_size=50
@@ -46,11 +47,14 @@ class App(tk.Tk):
                 self.rect[row,column] = self.canvas.create_rectangle(x1,y1,x2,y2, tags="rect")
                 for each in board["objects"]:
                     if column is each["column"] and row is each["row"]:
-                        self.im.append(Image.open(each["filename"]))
+                        self.im.append(Image.open("images/"+each["filename"]))
                         self.im.append(self.im[-1].resize((square_size-2,square_size-2), Image.ANTIALIAS))
                         self.photo.append(ImageTk.PhotoImage(self.im[-1]))
                         self.canvas.create_image((x1-(square_size/2)-1),(y1-(square_size/2)-1), image=self.photo[-1])
 
+        self.canvas.postscript(file="out.eps")
+        outfile = Image.open("out.eps")
+        outfile.save("out.png", "png")
         self.after(delay, lambda: self.redraw(delay))
 
 if __name__ == "__main__":

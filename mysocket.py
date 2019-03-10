@@ -57,7 +57,7 @@ async def time(websocket, path):
         task.cancel()
 
 
-start_server = websockets.serve(time, 'auten.space', 5678)
+start_server = websockets.serve(time, '192.168.1.86', 5678)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

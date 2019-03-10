@@ -11,14 +11,14 @@
   arr = []
   var myObj = []
   var ping = 0
-  websocket = new WebSocket("ws://auten.space:5678/");
-  var ws = new WebSocket("ws://auten.space:5678/")
+  websocket = new WebSocket("ws://192.168.1.86:5678/");
+  var ws = new WebSocket("ws://192.168.1.86:5678/")
   ws.onmessage = function (event) {
       console.log(event.data)
       if(event.data.split(',').length < 5){
         console.log("Uh we need to ping?")
         myObj = JSON.parse(event.data);
-        ping = 3
+        ping = 5
       }
       else
         arr = event.data.split(", ");
@@ -63,13 +63,14 @@
     else im = tree;
     ctx.drawImage(im, y*square, x*square, (x2)*square, (y2)*square);
   }
-	setInterval(render, 250) //draw ping at 4fps
+	setInterval(render, 100) //draw ping at 10fps
 
 	function render()
 	{
 		// delete last frame's visuals
+    ctx.beginPath();
 		ctx.clearRect(0, 0, w, h);
-
+    console.log("cleared")
 		img=document.getElementById("h")
 		ctx.drawImage(img, 0, 0);
 
@@ -92,13 +93,15 @@
     ctx.strokeStyle="#000000"
     ctx.stroke()
     if(ping > 0){
-      ctx.strokeStyle="#000000"
-      ctx.rect(myObj['x']*w -20, myObj['y']*h -20, 20, 20);
+      ctx.strokeStyle="#FF0000"
+      ctx.lineWidth = 7
+      ctx.beginPath()
+      ctx.arc(myObj['x']*w -20, myObj['y']*h -20, 30-(ping*4), 0, 2 * Math.PI);
       ping = ping - 1;
-
+      console.log(ping)
       ctx.stroke()
-
       ctx.strokeStyle="#0000CC"
+      ctx.lineWidth = 1
     }
 
 

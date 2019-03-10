@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<img src="images/grass.png" id="h" hidden />
+<canvas id="ctx" style='width:900; height:660; border-style:solid; border-color:red;'></canvas>
+<body bgcolor = "#FFFFFF"></body>
+
+<script>
+
+	var ctx = document.getElementById("ctx").getContext("2d");		// gets canvas and stores it in ctx
+	var h = window.innerHeight-40;		// determine size of canvas
+	var w = h * 14;
+	w = w / 11;
+	ctx.canvas.width = w;							// set canvas width to that of browser
+	ctx.canvas.height = h;							// set canvas height to that of browser
+	blocks = []
+	ctx.fillStyle="#0000CC"
+
+	document.getElementById("h").width=w*2
+	document.getElementById("h").height=h*2
+
+	setInterval(render, 20) //draw ping at 50fps
+
+	function render()
+	{
+		// delete last frame's visuals
+		ctx.clearRect(0, 0, w, h);
+
+		img=document.getElementById("h")
+		ctx.drawImage(img, 0, 0);
+
+
+		offsetH = h/11
+		offsetW = w/14
+		for(i = 0; i <11; i++){
+			for(y = 0; y < 14; y++){
+				ctx.rect(i*offsetH, y*offsetW, (i+1)*offsetH, (y+1)*offsetW)
+			}
+		}
+		ctx.stroke()
+	}
+</script>

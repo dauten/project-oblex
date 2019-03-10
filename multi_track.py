@@ -66,7 +66,7 @@ while True:
 	b = open("board.json", "w")
 	l = open("large.json", "w")
 	b.write('{"objects":[')
-	l.write('{"objects":[')
+	l.write('{"terrain":[')
 	# loop over the bounding boxes and draw then on the frame
 	for n, box in enumerate(boxes):
 		(x, y, w, h) = [int(v) for v in box]

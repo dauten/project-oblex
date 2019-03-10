@@ -1,24 +1,90 @@
+
 <!DOCTYPE html>
-<html>
-<body>
-
-<img src="board.png" id="demo"/>
+<img src="images/grass.png" id="h" hidden />
+<canvas id="ctx" style='width:900; height:660; border-style:solid; border-color:red;'></canvas>
+<body bgcolor = "#FFFFFF"></body>
+<img src="images/dwarf.png" id="dwarf.png" hidden />
+<img src="images/minotaur.png" id="minotaur.png" hidden />
+<img src="images/infantry.png" id="infantry.png" hidden />
+<img src="images/tree.png" id="tree.png" hidden />
 <script>
+  arr = []
+  websocket = new WebSocket("ws://auten.space:5678/");
+  var ws = new WebSocket("ws://auten.space:5678/")
+  ws.onmessage = function (event) {
+      console.log(event.data)
+      if(event.data.split(',') < 5){
+        console.log("Uh we need to ping?")
+      }
+      else
+        arr = event.data.split(", ");
 
-setInterval(function(){
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    var d = new Date();
-     document.getElementById("demo").src = this.responseText.src
-     document.getElementById("demo").src = "board.png"
-    }
   };
-  xhttp.open("GET", "board.png", true);
-  xhttp.send();
-  console.log("update")
-}, 500); /* time in milliseconds (ie 2 seconds)*/
 
+
+
+	var ctx = document.getElementById("ctx").getContext("2d");		// gets canvas and stores it in ctx
+	var h = window.innerHeight-40;		// determine size of canvas
+	var w = h * 14;
+	w = w / 11;
+	ctx.canvas.width = w;							// set canvas width to that of browser
+	ctx.canvas.height = h;							// set canvas height to that of browser
+	blocks = []
+	ctx.fillStyle="#0000CC"
+
+	document.getElementById("h").width=w*2
+	document.getElementById("h").height=h*2
+  square = (w/14)
+
+  document.getElementById('ctx').addEventListener('click',function(evt){
+  console.log("We got a click at "+evt.clientX + ',' + evt.clientY+", which is percents relative to height and width ("+w+", "+h+")would be "+evt.clientX/w+", "+evt.clientY/h);
+  websocket.send(JSON.stringify({action: 'ping', x:(evt.clientX/w), y:(evt.clientY/h)}));
+
+  },false);
+
+  dwarf = document.getElementById("dwarf.png")
+  minotaur = document.getElementById("minotaur.png")
+  infantry = document.getElementById("infantry.png")
+  tree = document.getElementById("tree.png")
+
+
+  //takes img object instantiated above
+  //and row/column and draws it at that location
+  function draw(image, x, y, x2, y2){
+
+    im = image
+    if(image == "'dwarf'") im = dwarf;
+    else if(image == "'infantry'") im = infantry;
+    else if(image == "'minotaur'") im = minotaur;
+    else im = tree;
+    ctx.drawImage(im, y*square, x*square, (x2)*square, (y2)*square);
+  }
+	setInterval(render, 250) //draw ping at 4fps
+
+	function render()
+	{
+		// delete last frame's visuals
+		ctx.clearRect(0, 0, w, h);
+
+		img=document.getElementById("h")
+		ctx.drawImage(img, 0, 0);
+
+
+		offsetH = h/11
+		offsetW = w/14
+		for(i = 0; i <11; i++){
+			for(y = 0; y < 14; y++){
+				ctx.rect(i*offsetH, y*offsetW, (i+1)*offsetH, (y+1)*offsetW)
+			}
+		}
+
+    for(i = 0; i < (arr.length/5); i++){
+      if(arr[0 + i*5] != "ping")
+        draw(arr[0 + i*5], arr[1+ i*5], arr[2+ i*5], arr[3+ i*5], arr[3+ i*5], arr[4+ i*5]);
+      else{
+        //ping at coords the decimals at arr[1+ i*5], arr[2+ i*5] correspond to
+      }
+    }
+		ctx.stroke()
+	}
 </script>
-</body>
-</html>

@@ -9,7 +9,7 @@ import time
 
 num_of_rows=11
 num_of_cols=14
-square_size=75
+square_size=50
 
 
 

@@ -83,7 +83,7 @@ while True:
 		else:
 			dy = int(h/50)+1
 			dx = int(w/50)+1
-			l.write('{"filename":"'+files[n]+'", "tlx":'+str(int(1.5 + x/45))+',"tly":'+str(int(1.5 + y/45))+',"height":'+str(dy)+',"width":'+str(dx)+"}")
+			l.write('{"filename":"'+files[n]+'", "tlx":'+str(int(1.5 + y/45))+',"tly":'+str(int(1.5 + x/45))+',"height":'+str(dy)+',"width":'+str(dx)+"}")
 	b.write("]}")
 	b.close()
 	l.write("]}")

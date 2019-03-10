@@ -7,16 +7,18 @@ import json
 USERS = set()
 
 async def con(websocket, path):
-    async for message in websocket:
-        print("got a message")
-        #for every reply (aka ping)...
-        data = json.loads(message)
-        if data['action'] == 'ping':
-            #forward it to everyone
-            print("returning ping")
-        if USERS:       # asyncio.wait doesn't accept an empty list
-            await asyncio.wait([user.send(message) for user in USERS])
-
+    try:
+        async for message in websocket:
+            print("got a message")
+            #for every reply (aka ping)...
+            data = json.loads(message)
+            if data['action'] == 'ping':
+                #forward it to everyone
+                print("returning ping")
+            if USERS:       # asyncio.wait doesn't accept an empty list
+                await asyncio.wait([user.send(message) for user in USERS])
+    except Exception as e:
+        print("Error reading from socket..\n\n")
 
 async def pro(websocket, path):
     while True:
@@ -28,7 +30,7 @@ async def pro(websocket, path):
             for each in board["objects"]:
                 tokens.append([each["filename"][:-4], each["row"]-1, each["column"]-1, 1, 1 ])
             for each in large["terrain"]:
-                tokens.append([each["filename"][:-4], each["tlx"]-1, each["tlx"]-1, each["height"], each["width"] ])
+                tokens.append([each["filename"][:-4], each["tlx"]-1, each["tly"]-1, each["height"], each["width"] ])
             print("sending message")
             tokens = str(tokens).replace("[", "").replace("]", "")
             await websocket.send(tokens)

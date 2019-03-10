@@ -18,7 +18,7 @@
       if(event.data.split(',').length < 5){
         console.log("Uh we need to ping?")
         myObj = JSON.parse(event.data);
-        ping = 10
+        ping = 3
       }
       else
         arr = event.data.split(", ");
@@ -89,13 +89,18 @@
         //ping at coords the decimals at arr[1+ i*5], arr[2+ i*5] correspond to
       }
     }
-
+    ctx.strokeStyle="#000000"
+    ctx.stroke()
     if(ping > 0){
-      console.log("Wrigin BOX!")
-      ctx.rect(myObj['x']*w, myObj['y']*h, myObj['x']+30, myObj['y']+30);
+      ctx.strokeStyle="#000000"
+      ctx.rect(myObj['x']*w -20, myObj['y']*h -20, 20, 20);
       ping = ping - 1;
+
+      ctx.stroke()
+
+      ctx.strokeStyle="#0000CC"
     }
 
-		ctx.stroke()
+
 	}
 </script>
